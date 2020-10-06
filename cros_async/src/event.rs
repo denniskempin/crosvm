@@ -2,13 +2,13 @@ use crate::{new, AsyncResult, IoSourceExt};
 use std::os::unix::io::AsRawFd;
 
 /// An async version of sys_util::EventFd.
-pub struct EventAsync<'a, F: AsRawFd + 'a> {
-    io_source: Box<dyn IoSourceExt<F> + 'a>,
+pub struct EventAsync<F: AsRawFd + 'static> {
+    io_source: Box<dyn IoSourceExt<F>>,
 }
 
-impl<'a, F: AsRawFd + 'a> EventAsync<'a, F> {
+impl<F: AsRawFd + 'static> EventAsync<F> {
     #[allow(dead_code)]
-    pub fn new(f: F) -> AsyncResult<EventAsync<'a, F>> {
+    pub fn new(f: F) -> AsyncResult<EventAsync<F>> {
         Ok(EventAsync { io_source: new(f)? })
     }
 
